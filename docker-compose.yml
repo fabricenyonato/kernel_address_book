@@ -1,0 +1,38 @@
+version: '3'
+services:
+  mongodb:
+    image: mongo:5.0.6-focal
+    volumes:
+      - ./docker/mongo_data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: qcsjEDAZ7D6dMgeY
+      MONGO_INITDB_DATABASE: kernel_address_book
+    ports:
+      - "3200:27017"
+  nodejs:
+    depends_on:
+      - mongodb
+    image: node:16.4.2-buster-slim
+    ports:
+      - "3100:3000"
+    volumes:
+      - ./kernel-address-book-backend:/home/node/app
+    command: bash -c "yarn && yarn dev"
+    working_dir: /home/node/app
+    environment:
+      MONGO_URI: mongodb://root:qcsjEDAZ7D6dMgeY@mongodb:27017
+      MONGO_DATABASE: kernel_address_book
+  nuxtjs:
+    depends_on:
+      - nodejs
+    image: node:16.4.2-buster-slim
+    volumes:
+      - ./kernel-address-book-frontend:/home/node/app
+    working_dir: /home/node/app
+    command: bash -c "yarn && yarn dev"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: e_agribusiness
+    ports:
+      - "4000:3000"

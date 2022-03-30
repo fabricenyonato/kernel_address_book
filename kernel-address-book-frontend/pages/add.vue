@@ -1,10 +1,8 @@
 <template>
-  <Form @save="save($event)" />
+  <Form @save="save($event)" title="Add new" />
 </template>
 
 <script>
-import { addContact } from '../api'
-
 export default {
   data() {
     return {
@@ -13,12 +11,9 @@ export default {
   },
   methods: {
     async save(data) {
-      try {
-        await addContact(data)
-      }
-      catch (error) {
-        console.log(error)
-      }
+      this.$api.create(data)
+      .then(() => this.$router.push({ path: '/' }))
+      .catch(console.error)
     }
   }
 }

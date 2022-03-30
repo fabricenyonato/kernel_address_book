@@ -10,24 +10,25 @@
 </template>
 
 <script>
-import { deleteContact, findOneContact } from '../../api'
-
 export default {
   data() {
     return { contact: null }
   },
+
   async asyncData(ctx) {
-    const { id } = ctx.params
-    const contact = await findOneContact(id)
+    const id = ctx.params.id
+
+    const contact = await ctx.app.$api.one(id)
     return { contact }
   },
+
   methods: {
     back() {
       this.$router.back()
     },
 
     async remove() {
-      await deleteContact(this.contact._id)
+      await this.$api.delete(this.contact._id)
       this.$router.push({ path: '/' })
     },
   }

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3 class="my-3">Add new</h3>
+    <h3 class="my-3">{{ title }}</h3>
 
     <ValidationObserver
       v-slot="{ invalid }"
@@ -107,6 +107,10 @@
 import { ValidationProvider, ValidationObserver } from "vee-validate";
 
 export default {
+  props: {
+    title: String,
+    initialValue: Object,
+  },
   components: { ValidationProvider, ValidationObserver },
   data() {
     return {
@@ -115,6 +119,16 @@ export default {
       tel: null,
       email: null,
     };
+  },
+  mounted() {
+    if (!this.initialValue) {
+      return
+    }
+
+    this.firstName = this.initialValue.firstName
+    this.lastName = this.initialValue.lastName
+    this.email = this.initialValue.email
+    this.tel = this.initialValue.tel
   },
   methods: {
     submit() {

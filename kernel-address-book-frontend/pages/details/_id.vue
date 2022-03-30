@@ -4,7 +4,7 @@
         <h3>{{ `${contact.firstName} ${contact.lastName}` }}</h3>
         <div class="flex-fill"></div>
 
-        <NuxtLink class="btn btn-link" to="/add">Update</NuxtLink>
+        <NuxtLink class="btn btn-link" :to="`/update/${contact._id}`">Update</NuxtLink>
         <NuxtLink class="btn btn-link text-danger" :to="`/delete/${contact._id}`">Delete</NuxtLink>
     </div>
 
@@ -12,12 +12,12 @@
       <tbody>
         <tr>
           <th>Phone number</th>
-          <td>{{ contact.tels[0] }}</td>
+          <td>{{ contact.tel }}</td>
         </tr>
 
         <tr>
           <th>Email</th>
-          <td>{{ contact.emails[0] }}</td>
+          <td>{{ contact.email }}</td>
         </tr>
       </tbody>
     </table>
@@ -25,15 +25,14 @@
 </template>
 
 <script>
-import { findOneContact } from '../../api'
-
 export default {
   data() {
     return { contact: null }
   },
   async asyncData(ctx) {
-    const { id } = ctx.params
-    const contact = await findOneContact(id)
+    const id = ctx.params.id
+
+    const contact = await ctx.app.$api.one(id)
     return { contact }
   },
 }

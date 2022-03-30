@@ -4,8 +4,8 @@ export default interface Contact {
 	_id?: ObjectId
 	firstName: string
 	lastName: string
-	emails: string[]
-	tels: string[]
+	email: string
+	tel: string
 	createdAt?: Date
 	lastUpdatedAt?: Date|null
 	deleted?: boolean

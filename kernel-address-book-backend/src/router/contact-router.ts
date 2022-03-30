@@ -43,21 +43,16 @@ router.get('/', route(async (request, response) => {
 const postSchema = Joi.object().keys({
   firstName: Joi.string().required(),
   lastName: Joi.string().required(),
-  emails: Joi.array()
-    .items(Joi.string().email().required())
-    .min(1)
-    .required(),
-  tels: Joi.array()
-    .items(Joi.string().pattern(new RegExp('^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$')).required())
-    .min(1)
-    .required(),
+  email: Joi.string().email().required(),
+  tel: Joi.string().required(),
 })
 
 router.post('/', validator(postSchema), route(async (request, response) => {
   const contactRepository =
   	container.get<ContactRepository>(ContainerId.contactRepository)
 
-	const contact: Contact = request.body
+  const { firstName, lastName, email, tel } = request.body
+  const contact: Contact = { firstName, lastName, email, tel }
   const newContact = await contactRepository.create(contact)
 
   response.status(201).json(newContact)
@@ -83,21 +78,13 @@ router.get('/:id', route(async (request, response) => {
   response.json(item)
 }))
 
-const pathSchema = Joi.object().keys({
-  firstName: Joi.string(),
-  lastName: Joi.string(),
-  emails: Joi.array()
-    .items(Joi.string().email()),
-  tels: Joi.array()
-    .items(Joi.string().pattern(new RegExp('^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$'))),
-})
-
-router.patch('/:id', validator(pathSchema), route(async (request, response, next) => {
+router.patch('/:id', validator(postSchema), route(async (request, response, next) => {
   const contactRepository =
   	container.get<ContactRepository>(ContainerId.contactRepository)
 
 	const { id } = request.params
-	const body = request.body as Contact
+	const { firstName, lastName, email, tel } = request.body as Contact
+  const body: Contact = { firstName, lastName, email, tel }
 
   const contact = await contactRepository.update(id, body)
   response.json(contact)

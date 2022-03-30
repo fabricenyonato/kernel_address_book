@@ -1,4 +1,4 @@
-const baseUrl = 'http://192.168.48.3:3000'
+const baseUrl = 'http://192.168.160.3:3000'
 
 async function findAllContacts() {
   const response = await fetch(`${baseUrl}/contacts`)
